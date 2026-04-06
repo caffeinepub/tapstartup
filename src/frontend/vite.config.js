@@ -14,10 +14,10 @@ process.env.II_URL = process.env.II_URL || ii_url;
 process.env.STORAGE_GATEWAY_URL =
   process.env.STORAGE_GATEWAY_URL || "https://blob.caffeine.ai";
 
-// Plugin to copy dotfiles/dotfolders that Vite skips by default
-function copyDotFiles() {
+// Plugin to copy dotfiles (e.g. .well-known, .ic-assets.json5) from public/ to dist/
+function copyDotfilesPlugin() {
   return {
-    name: "copy-dot-files",
+    name: "copy-dotfiles",
     closeBundle() {
       const publicDir = path.resolve(__dirname, "public");
       const distDir = path.resolve(__dirname, "dist");
@@ -25,21 +25,21 @@ function copyDotFiles() {
       function copyRecursive(src, dest) {
         const stat = fs.statSync(src);
         if (stat.isDirectory()) {
-          fs.mkdirSync(dest, { recursive: true });
-          for (const entry of fs.readdirSync(src)) {
-            copyRecursive(path.join(src, entry), path.join(dest, entry));
+          if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
+          for (const child of fs.readdirSync(src)) {
+            copyRecursive(path.join(src, child), path.join(dest, child));
           }
         } else {
           fs.copyFileSync(src, dest);
         }
       }
 
-      // Copy .well-known directory
+      // Copy .well-known folder
       const wellKnownSrc = path.join(publicDir, ".well-known");
       const wellKnownDest = path.join(distDir, ".well-known");
       if (fs.existsSync(wellKnownSrc)) {
         copyRecursive(wellKnownSrc, wellKnownDest);
-        console.log("[copy-dot-files] Copied .well-known to dist/");
+        console.log("[copy-dotfiles] Copied .well-known to dist/");
       }
 
       // Copy .ic-assets.json5
@@ -47,7 +47,7 @@ function copyDotFiles() {
       const icAssetsDest = path.join(distDir, ".ic-assets.json5");
       if (fs.existsSync(icAssetsSrc)) {
         fs.copyFileSync(icAssetsSrc, icAssetsDest);
-        console.log("[copy-dot-files] Copied .ic-assets.json5 to dist/");
+        console.log("[copy-dotfiles] Copied .ic-assets.json5 to dist/");
       }
     },
   };
@@ -84,7 +84,7 @@ export default defineConfig({
     environment(["II_URL"]),
     environment(["STORAGE_GATEWAY_URL"]),
     react(),
-    copyDotFiles(),
+    copyDotfilesPlugin(),
   ],
   resolve: {
     alias: [
