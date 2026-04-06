@@ -24,8 +24,9 @@ build:
         - cat dist/.well-known/ic-domains
         - echo "=== VERIFY dist/.ic-assets.json5 ==="
         - cat dist/.ic-assets.json5
-        - echo "=== VERIFY dist/ listing ==="
+        - echo "=== dist/ listing ==="
         - ls -la dist/
+        - echo "=== dist/.well-known/ listing ==="
         - ls -la dist/.well-known/
 
     - type: pre-built
