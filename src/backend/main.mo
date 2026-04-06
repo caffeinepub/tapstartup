@@ -1,11 +1,11 @@
-import Migration "migration";
+
 import Text "mo:core/Text";
 import Set "mo:core/Set";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 
 // Use persistent actor with explicit migration
-(with migration = Migration.run)
+
 actor {
   // Admin Principal is anonymous user ("2vxsx-fae") by default
   let admin = Principal.fromText("2vxsx-fae");

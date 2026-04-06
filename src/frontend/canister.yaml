@@ -17,6 +17,13 @@ build:
           }
           EOF
         - pnpm --filter '@caffeine/template-frontend' build:skip-bindings
+        - mkdir -p dist/.well-known
+        - printf 'www.kwtd.eu' > dist/.well-known/ic-domains
+        - cp public/.ic-assets.json5 dist/.ic-assets.json5
+        - echo "[ic-domains] content:"
+        - cat dist/.well-known/ic-domains
+        - echo "[ic-assets] content:"
+        - cat dist/.ic-assets.json5
 
     - type: pre-built
       url: https://github.com/dfinity/sdk/raw/refs/tags/0.27.0/src/distributed/assetstorage.wasm.gz
