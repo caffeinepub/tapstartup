@@ -91,7 +91,7 @@ export class ExternalBlob {
 }
 export interface backendInterface {
     addSubscriber(email: string): Promise<void>;
-    getAllSubscribers(): Promise<Array<string>>;
+    getAllSubs(): Promise<Array<string>>;
 }
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
@@ -109,17 +109,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async getAllSubscribers(): Promise<Array<string>> {
+    async getAllSubs(): Promise<Array<string>> {
         if (this.processError) {
             try {
-                const result = await this.actor.getAllSubscribers();
+                const result = await this.actor.getAllSubs();
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getAllSubscribers();
+            const result = await this.actor.getAllSubs();
             return result;
         }
     }

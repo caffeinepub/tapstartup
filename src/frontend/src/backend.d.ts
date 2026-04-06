@@ -9,5 +9,5 @@ export interface None {
 export type Option<T> = Some<T> | None;
 export interface backendInterface {
     addSubscriber(email: string): Promise<void>;
-    getAllSubscribers(): Promise<Array<string>>;
+    getAllSubs(): Promise<Array<string>>;
 }

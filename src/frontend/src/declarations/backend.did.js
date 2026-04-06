@@ -10,7 +10,7 @@ import { IDL } from '@icp-sdk/core/candid';
 
 export const idlService = IDL.Service({
   'addSubscriber' : IDL.Func([IDL.Text], [], []),
-  'getAllSubscribers' : IDL.Func([], [IDL.Vec(IDL.Text)], []),
+  'getAllSubs' : IDL.Func([], [IDL.Vec(IDL.Text)], []),
 });
 
 export const idlInitArgs = [];
@@ -18,7 +18,7 @@ export const idlInitArgs = [];
 export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     'addSubscriber' : IDL.Func([IDL.Text], [], []),
-    'getAllSubscribers' : IDL.Func([], [IDL.Vec(IDL.Text)], []),
+    'getAllSubs' : IDL.Func([], [IDL.Vec(IDL.Text)], []),
   });
 };
 

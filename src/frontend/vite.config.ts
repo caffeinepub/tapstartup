@@ -2,6 +2,11 @@ import { fileURLToPath, URL } from "url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import environment from "vite-plugin-environment";
+import * as fs from "fs";
+import * as path from "path";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
 
 const ii_url =
   process.env.DFX_NETWORK === "local"
@@ -11,6 +16,22 @@ const ii_url =
 process.env.II_URL = process.env.II_URL || ii_url;
 process.env.STORAGE_GATEWAY_URL =
   process.env.STORAGE_GATEWAY_URL || "https://blob.caffeine.ai";
+
+function copyDotfiles(src: string, dest: string) {
+  const entries = fs.readdirSync(src, { withFileTypes: true });
+  for (const entry of entries) {
+    if (!entry.name.startsWith(".")) continue;
+    const srcPath = path.join(src, entry.name);
+    const destPath = path.join(dest, entry.name);
+    if (entry.isDirectory()) {
+      fs.mkdirSync(destPath, { recursive: true });
+      copyDotfiles(srcPath, destPath);
+    } else {
+      fs.mkdirSync(path.dirname(destPath), { recursive: true });
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+}
 
 export default defineConfig({
   logLevel: "error",
@@ -43,6 +64,19 @@ export default defineConfig({
     environment(["II_URL"]),
     environment(["STORAGE_GATEWAY_URL"]),
     react(),
+    {
+      name: "copy-dotfiles",
+      closeBundle() {
+        const publicDir = path.resolve(__dirname, "public");
+        const distDir = path.resolve(__dirname, "dist");
+        try {
+          copyDotfiles(publicDir, distDir);
+          console.log("[copy-dotfiles] Dotfiles copied to dist/");
+        } catch (err) {
+          console.error("[copy-dotfiles] Failed to copy dotfiles:", err);
+        }
+      },
+    },
   ],
   resolve: {
     alias: [

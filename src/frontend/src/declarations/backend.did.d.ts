@@ -12,7 +12,7 @@ import type { Principal } from '@icp-sdk/core/principal';
 
 export interface _SERVICE {
   'addSubscriber' : ActorMethod<[string], undefined>,
-  'getAllSubscribers' : ActorMethod<[], Array<string>>,
+  'getAllSubs' : ActorMethod<[], Array<string>>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

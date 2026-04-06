@@ -17,14 +17,6 @@ build:
           }
           EOF
         - pnpm --filter '@caffeine/template-frontend' build:skip-bindings
-        - |
-          echo "--- Ensuring dotfiles are in dist/ ---"
-          mkdir -p dist/.well-known
-          cp public/.well-known/ic-domains dist/.well-known/ic-domains
-          cp public/.ic-assets.json5 dist/.ic-assets.json5
-          echo "--- Contents of dist/.well-known/ic-domains: ---"
-          cat dist/.well-known/ic-domains
-          echo "--- dist/.ic-assets.json5 exists: $(ls -la dist/.ic-assets.json5) ---"
 
     - type: pre-built
       url: https://github.com/dfinity/sdk/raw/refs/tags/0.27.0/src/distributed/assetstorage.wasm.gz
